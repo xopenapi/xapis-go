@@ -36,4 +36,6 @@ model_update_config.go
 model_update_config_group.go
 model_update_config_template.go
 response.go
+test/api_config_test.go
+test/api_storage_test.go
 utils.go
