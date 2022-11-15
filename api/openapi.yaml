@@ -1,0 +1,791 @@
+openapi: 3.0.3
+info:
+  license:
+    name: Apache-2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  title: xapi services
+  version: 0.0.1
+servers:
+- url: https://api.growingbox.cn
+tags:
+- description: 通用配置
+  name: config
+- description: 云存储相关
+  name: storage
+paths:
+  /config/v1/configs:
+    get:
+      operationId: getConfigByKey
+      parameters:
+      - description: 配置所属的资源ID
+        explode: true
+        in: query
+        name: resource_id
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: 配置项
+        explode: true
+        in: query
+        name: key
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+          description: 返回配置
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:read
+      - bearer: []
+      summary: 根据配置项查询配置
+      tags:
+      - config
+    post:
+      operationId: createConfig
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateConfig'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+          description: 返回配置
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:write
+      - bearer: []
+      summary: 创建配置
+      tags:
+      - config
+  /config/v1/configs/{id}:
+    delete:
+      operationId: deleteConfig
+      parameters:
+      - description: 配置ID
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: 删除成功
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:delete
+      - bearer: []
+      summary: 删除配置
+      tags:
+      - config
+    get:
+      operationId: getConfig
+      parameters:
+      - description: 配置ID
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+          description: 返回配置
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:read
+      - bearer: []
+      summary: 查询配置
+      tags:
+      - config
+    patch:
+      operationId: updateConfig
+      parameters:
+      - description: 配置ID
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateConfig'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Config'
+          description: 返回配置
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:write
+      - bearer: []
+      summary: 更新配置
+      tags:
+      - config
+  /config/v1/config_templates:
+    get:
+      operationId: getConfigTemplateByKey
+      parameters:
+      - description: 配置项
+        explode: true
+        in: query
+        name: key
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigTemplate'
+          description: 返回配置模版
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:read
+      - bearer: []
+      summary: 根据配置项查询配置模版
+      tags:
+      - config
+    post:
+      operationId: createConfigTemplate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateConfigTemplate'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigTemplate'
+          description: 返回配置模板
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:write
+      - bearer: []
+      summary: 创建配置模版
+      tags:
+      - config
+  /config/v1/config_templates/{id}:
+    delete:
+      operationId: deleteConfigTemplate
+      parameters:
+      - description: 配置模板ID
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: 删除成功
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:delete
+      - bearer: []
+      summary: 删除配置模板
+      tags:
+      - config
+    get:
+      operationId: getConfigTemplate
+      parameters:
+      - description: 配置模板ID
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigTemplate'
+          description: 返回配置模板
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:read
+      - bearer: []
+      summary: 查询配置模板
+      tags:
+      - config
+    patch:
+      operationId: updateConfigTemplate
+      parameters:
+      - description: 配置模板ID
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateConfigTemplate'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigTemplate'
+          description: 返回配置模板
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:write
+      - bearer: []
+      summary: 更新配置模板
+      tags:
+      - config
+  /config/v1/config_groups:
+    post:
+      operationId: createConfigGroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateConfigGroup'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigGroup'
+          description: 返回配置组
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:write
+      - bearer: []
+      summary: 创建配置组
+      tags:
+      - config
+  /config/v1/config_groups/{id}:
+    delete:
+      operationId: deleteConfigGroup
+      parameters:
+      - description: 配置组ID
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          description: 删除成功
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:delete
+      - bearer: []
+      summary: 删除配置组
+      tags:
+      - config
+    get:
+      operationId: getConfigGroup
+      parameters:
+      - description: 配置组ID
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigGroup'
+          description: 返回配置组
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:read
+      - bearer: []
+      summary: 查询配置组
+      tags:
+      - config
+    patch:
+      operationId: updateConfigGroup
+      parameters:
+      - description: 配置组ID
+        explode: false
+        in: path
+        name: id
+        required: true
+        schema:
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateConfigGroup'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfigGroup'
+          description: 返回配置组
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - configs:write
+      - bearer: []
+      summary: 更新配置组
+      tags:
+      - config
+  /storage/v1/temporary_credentials:
+    get:
+      description: 获取上传文件临时凭证
+      operationId: getStorageTemporaryCredentials
+      parameters:
+      - description: 指定使用的云储存平台，可选值有：qcloud（腾讯云）、aliyun（阿里云）。如果未指定，使用默认平台。
+        explode: true
+        in: query
+        name: provider
+        required: false
+        schema:
+          $ref: '#/components/schemas/StorageProvider'
+        style: form
+      - description: 上传路径，可以为空
+        explode: true
+        in: query
+        name: path
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageTemporaryCredentials'
+          description: 返回上传到云存储时需要的临时凭证和参数
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - storage.credentials:read
+      - bearer: []
+      summary: 获取上传文件临时凭证
+      tags:
+      - storage
+components:
+  responses:
+    ErrorResponse:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ApiError'
+      description: 返回错误
+  schemas:
+    Config:
+      example:
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        group_id: group_id
+        resource_id: resource_id
+        created_at: 2000-01-23T04:56:07.000+00:00
+        template_id: template_id
+        id: id
+        value: "{}"
+        key: key
+      properties:
+        id:
+          description: 配置ID
+          type: string
+        resource_id:
+          description: 所属的资源ID
+          type: string
+        group_id:
+          description: 所属的配置组ID
+          type: string
+        template_id:
+          description: 配置模板ID
+          type: string
+        key:
+          description: 配置项
+          type: string
+        value:
+          description: 配置内容
+          type: object
+        created_at:
+          description: 创建时间
+          format: date-time
+          type: string
+        updated_at:
+          description: 最后更新时间
+          format: date-time
+          type: string
+      required:
+      - created_at
+      - id
+      - key
+      - resource_id
+      - value
+      type: object
+    CreateConfig:
+      example:
+        group_id: group_id
+        resource_id: resource_id
+        template_id: template_id
+        value: "{}"
+        key: key
+      properties:
+        resource_id:
+          description: 所属的资源ID
+          type: string
+        group_id:
+          description: 所属的配置组ID
+          type: string
+        template_id:
+          description: 配置模板ID
+          type: string
+        key:
+          description: 配置项
+          type: string
+        value:
+          description: 配置内容
+          type: object
+      required:
+      - key
+      - resource_id
+      - value
+      type: object
+    UpdateConfig:
+      example:
+        group_id: group_id
+        resource_id: resource_id
+        template_id: template_id
+        value: "{}"
+        key: key
+      properties:
+        resource_id:
+          description: 所属的资源ID
+          type: string
+        group_id:
+          description: 所属的配置组ID
+          type: string
+        template_id:
+          description: 配置模板ID
+          type: string
+        key:
+          description: 配置项
+          type: string
+        value:
+          description: 配置内容
+          type: object
+      type: object
+    CreateConfigTemplate:
+      example:
+        group_id: group_id
+        value: "{}"
+        key: key
+      properties:
+        group_id:
+          description: 所属的配置组ID
+          type: string
+        key:
+          description: 配置项
+          type: string
+        value:
+          description: 配置内容
+          type: object
+      required:
+      - key
+      - value
+      type: object
+    UpdateConfigTemplate:
+      example:
+        group_id: group_id
+        value: "{}"
+        key: key
+      properties:
+        group_id:
+          description: 所属的配置组ID
+          type: string
+        key:
+          description: 配置项
+          type: string
+        value:
+          description: 配置内容
+          type: object
+      type: object
+    ConfigTemplate:
+      example:
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        group_id: group_id
+        created_at: 2000-01-23T04:56:07.000+00:00
+        id: id
+        value: "{}"
+        key: key
+      properties:
+        id:
+          description: 配置模板ID
+          type: string
+        group_id:
+          description: 所属的配置组ID
+          type: string
+        key:
+          description: 配置项
+          type: string
+        value:
+          description: 配置内容
+          type: object
+        created_at:
+          description: 创建时间
+          format: date-time
+          type: string
+        updated_at:
+          description: 最后更新时间
+          format: date-time
+          type: string
+      required:
+      - created_at
+      - id
+      - key
+      - value
+      type: object
+    CreateConfigGroup:
+      example:
+        name: name
+      properties:
+        name:
+          description: 配置组名称
+          type: string
+      required:
+      - name
+      type: object
+    UpdateConfigGroup:
+      example:
+        name: name
+      properties:
+        name:
+          description: 配置组名称
+          type: string
+      type: object
+    ConfigGroup:
+      example:
+        updated_at: 2000-01-23T04:56:07.000+00:00
+        name: name
+        created_at: 2000-01-23T04:56:07.000+00:00
+        id: id
+      properties:
+        id:
+          description: 配置组ID
+          type: string
+        name:
+          description: 配置组名称
+          type: string
+        created_at:
+          description: 创建时间
+          format: date-time
+          type: string
+        updated_at:
+          description: 最后更新时间
+          format: date-time
+          type: string
+      required:
+      - created_at
+      - id
+      - name
+      type: object
+    StorageProvider:
+      description: 云存储服务商
+      enum:
+      - qcloud
+      - aliyun
+      type: string
+      x-ms-enum:
+        name: StorageProvider
+        modelAsString: true
+    StorageTemporaryCredentials:
+      example:
+        bucket: uim-cdn-202110291082
+        provider: null
+        credentials: "{}"
+        region: ap-guangzhou
+        cdn: https://cdn.uimkit.chat
+        url: https://cdn.uimkit.chat/images/example.jpeg
+      properties:
+        provider:
+          $ref: '#/components/schemas/StorageProvider'
+        bucket:
+          description: 存储桶
+          example: uim-cdn-202110291082
+          type: string
+        region:
+          description: 地区
+          example: ap-guangzhou
+          type: string
+        cdn:
+          description: 存储对应的CDN地址
+          example: https://cdn.uimkit.chat
+          type: string
+        url:
+          description: 上传路径对应的CDN地址
+          example: https://cdn.uimkit.chat/images/example.jpeg
+          type: string
+        credentials:
+          description: 存储平台的临时上传凭证参数
+          type: object
+      required:
+      - bucket
+      - credentials
+      - provider
+      - region
+      type: object
+    ApiError:
+      properties:
+        code:
+          description: 错误码
+          example: missing_params
+          type: string
+        message:
+          description: 错误消息
+          example: 缺少参数
+          type: string
+        param:
+          description: 发生错误的字段
+          example: id
+          type: string
+      required:
+      - code
+      type: object
+  securitySchemes:
+    oauth2:
+      flows:
+        clientCredentials:
+          scopes:
+            configs:read: 读取配置、配置模版、配置组
+            configs:write: 创建、更新配置、配置模版、配置组
+            configs:delete: 删除配置、配置模版、配置组
+            storage.credentials:read: 获取云存储上传凭证
+          tokenUrl: https://mofan.cn.authok.cn/oauth/token
+      type: oauth2
+    bearer:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http
