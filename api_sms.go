@@ -19,76 +19,62 @@ import (
 )
 
 
-// StorageApiService StorageApi service
-type StorageApiService service
+// SmsApiService SmsApi service
+type SmsApiService service
 
-type ApiGetStorageTemporaryCredentialsRequest struct {
+type ApiSendSMSRequest struct {
 	ctx context.Context
-	ApiService *StorageApiService
-	provider *StorageProvider
-	path *string
+	ApiService *SmsApiService
+	sendSMS *SendSMS
 }
 
-// 指定使用的云储存平台，可选值有：qcloud（腾讯云）、aliyun（阿里云）。如果未指定，使用默认平台。
-func (r ApiGetStorageTemporaryCredentialsRequest) Provider(provider StorageProvider) ApiGetStorageTemporaryCredentialsRequest {
-	r.provider = &provider
+func (r ApiSendSMSRequest) SendSMS(sendSMS SendSMS) ApiSendSMSRequest {
+	r.sendSMS = &sendSMS
 	return r
 }
 
-// 上传路径，可以为空
-func (r ApiGetStorageTemporaryCredentialsRequest) Path(path string) ApiGetStorageTemporaryCredentialsRequest {
-	r.path = &path
-	return r
-}
-
-func (r ApiGetStorageTemporaryCredentialsRequest) Execute() (*StorageTemporaryCredentials, *http.Response, error) {
-	return r.ApiService.GetStorageTemporaryCredentialsExecute(r)
+func (r ApiSendSMSRequest) Execute() (*SendSMSResult, *http.Response, error) {
+	return r.ApiService.SendSMSExecute(r)
 }
 
 /*
-GetStorageTemporaryCredentials 获取上传文件临时凭证
+SendSMS 发送短信
 
-获取上传文件临时凭证
+发送短信
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiGetStorageTemporaryCredentialsRequest
+ @return ApiSendSMSRequest
 */
-func (a *StorageApiService) GetStorageTemporaryCredentials(ctx context.Context) ApiGetStorageTemporaryCredentialsRequest {
-	return ApiGetStorageTemporaryCredentialsRequest{
+func (a *SmsApiService) SendSMS(ctx context.Context) ApiSendSMSRequest {
+	return ApiSendSMSRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-//  @return StorageTemporaryCredentials
-func (a *StorageApiService) GetStorageTemporaryCredentialsExecute(r ApiGetStorageTemporaryCredentialsRequest) (*StorageTemporaryCredentials, *http.Response, error) {
+//  @return SendSMSResult
+func (a *SmsApiService) SendSMSExecute(r ApiSendSMSRequest) (*SendSMSResult, *http.Response, error) {
 	var (
-		localVarHTTPMethod   = http.MethodGet
+		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  *StorageTemporaryCredentials
+		localVarReturnValue  *SendSMSResult
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StorageApiService.GetStorageTemporaryCredentials")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SmsApiService.SendSMS")
 	if err != nil {
 		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/storage/v1/temporary_credentials"
+	localVarPath := localBasePath + "/sms/v1/send"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 
-	if r.provider != nil {
-		localVarQueryParams.Add("provider", parameterToString(*r.provider, ""))
-	}
-	if r.path != nil {
-		localVarQueryParams.Add("path", parameterToString(*r.path, ""))
-	}
 	// to determine the Content-Type header
-	localVarHTTPContentTypes := []string{}
+	localVarHTTPContentTypes := []string{"application/json"}
 
 	// set Content-Type header
 	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
@@ -104,6 +90,8 @@ func (a *StorageApiService) GetStorageTemporaryCredentialsExecute(r ApiGetStorag
 	if localVarHTTPHeaderAccept != "" {
 		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
 	}
+	// body params
+	localVarPostBody = r.sendSMS
 	if r.ctx != nil {
 		// API Key Authentication
 		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {

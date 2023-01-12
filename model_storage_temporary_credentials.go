@@ -21,9 +21,9 @@ type StorageTemporaryCredentials struct {
 	Bucket string `json:"bucket"`
 	// 地区
 	Region string `json:"region"`
-	// 存储对应的CDN地址
+	// CDN地址
 	Cdn *string `json:"cdn,omitempty"`
-	// 上传路径对应的CDN地址
+	// 上传之后的文件地址
 	Url *string `json:"url,omitempty"`
 	// 存储平台的临时上传凭证参数
 	Credentials map[string]interface{} `json:"credentials"`

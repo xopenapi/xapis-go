@@ -3,6 +3,7 @@
 README.md
 api/openapi.yaml
 api_config.go
+api_sms.go
 api_storage.go
 client.go
 configuration.go
@@ -14,6 +15,10 @@ docs/ConfigTemplate.md
 docs/CreateConfig.md
 docs/CreateConfigGroup.md
 docs/CreateConfigTemplate.md
+docs/SMSProvider.md
+docs/SendSMS.md
+docs/SendSMSResult.md
+docs/SmsApi.md
 docs/StorageApi.md
 docs/StorageProvider.md
 docs/StorageTemporaryCredentials.md
@@ -30,6 +35,9 @@ model_config_template.go
 model_create_config.go
 model_create_config_group.go
 model_create_config_template.go
+model_send_sms.go
+model_send_sms_result.go
+model_sms_provider.go
 model_storage_provider.go
 model_storage_temporary_credentials.go
 model_update_config.go
@@ -37,5 +45,6 @@ model_update_config_group.go
 model_update_config_template.go
 response.go
 test/api_config_test.go
+test/api_sms_test.go
 test/api_storage_test.go
 utils.go

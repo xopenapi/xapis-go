@@ -51,6 +51,8 @@ type APIClient struct {
 
 	ConfigApi *ConfigApiService
 
+	SmsApi *SmsApiService
+
 	StorageApi *StorageApiService
 }
 
@@ -71,6 +73,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 
 	// API Services
 	c.ConfigApi = (*ConfigApiService)(&c.common)
+	c.SmsApi = (*SmsApiService)(&c.common)
 	c.StorageApi = (*StorageApiService)(&c.common)
 
 	return c

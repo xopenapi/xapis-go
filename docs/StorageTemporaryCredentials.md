@@ -7,8 +7,8 @@ Name | Type | Description | Notes
 **Provider** | [**StorageProvider**](StorageProvider.md) |  | 
 **Bucket** | **string** | 存储桶 | 
 **Region** | **string** | 地区 | 
-**Cdn** | Pointer to **string** | 存储对应的CDN地址 | [optional] 
-**Url** | Pointer to **string** | 上传路径对应的CDN地址 | [optional] 
+**Cdn** | Pointer to **string** | CDN地址 | [optional] 
+**Url** | Pointer to **string** | 上传之后的文件地址 | [optional] 
 **Credentials** | **map[string]interface{}** | 存储平台的临时上传凭证参数 | 
 
 ## Methods

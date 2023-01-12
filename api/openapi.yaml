@@ -7,11 +7,14 @@ info:
   version: 0.0.1
 servers:
 - url: https://api.growingbox.cn
+- url: https://service-rjma2xb8-1252461817-in.gz.apigw.tencentcs.com:9009
 tags:
-- description: 通用配置
+- description: 通用配置服务
   name: config
-- description: 云存储相关
+- description: 云存储服务
   name: storage
+- description: 短信服务
+  name: sms
 paths:
   /config/v1/configs:
     get:
@@ -50,6 +53,7 @@ paths:
       - oauth2:
         - configs:read
       - bearer: []
+      - apiKey: []
       summary: 根据配置项查询配置
       tags:
       - config
@@ -77,6 +81,7 @@ paths:
       - oauth2:
         - configs:write
       - bearer: []
+      - apiKey: []
       summary: 创建配置
       tags:
       - config
@@ -105,6 +110,7 @@ paths:
       - oauth2:
         - configs:delete
       - bearer: []
+      - apiKey: []
       summary: 删除配置
       tags:
       - config
@@ -136,6 +142,7 @@ paths:
       - oauth2:
         - configs:read
       - bearer: []
+      - apiKey: []
       summary: 查询配置
       tags:
       - config
@@ -172,6 +179,7 @@ paths:
       - oauth2:
         - configs:write
       - bearer: []
+      - apiKey: []
       summary: 更新配置
       tags:
       - config
@@ -204,6 +212,7 @@ paths:
       - oauth2:
         - configs:read
       - bearer: []
+      - apiKey: []
       summary: 根据配置项查询配置模版
       tags:
       - config
@@ -231,6 +240,7 @@ paths:
       - oauth2:
         - configs:write
       - bearer: []
+      - apiKey: []
       summary: 创建配置模版
       tags:
       - config
@@ -259,6 +269,7 @@ paths:
       - oauth2:
         - configs:delete
       - bearer: []
+      - apiKey: []
       summary: 删除配置模板
       tags:
       - config
@@ -290,6 +301,7 @@ paths:
       - oauth2:
         - configs:read
       - bearer: []
+      - apiKey: []
       summary: 查询配置模板
       tags:
       - config
@@ -326,6 +338,7 @@ paths:
       - oauth2:
         - configs:write
       - bearer: []
+      - apiKey: []
       summary: 更新配置模板
       tags:
       - config
@@ -354,6 +367,7 @@ paths:
       - oauth2:
         - configs:write
       - bearer: []
+      - apiKey: []
       summary: 创建配置组
       tags:
       - config
@@ -382,6 +396,7 @@ paths:
       - oauth2:
         - configs:delete
       - bearer: []
+      - apiKey: []
       summary: 删除配置组
       tags:
       - config
@@ -413,6 +428,7 @@ paths:
       - oauth2:
         - configs:read
       - bearer: []
+      - apiKey: []
       summary: 查询配置组
       tags:
       - config
@@ -449,6 +465,7 @@ paths:
       - oauth2:
         - configs:write
       - bearer: []
+      - apiKey: []
       summary: 更新配置组
       tags:
       - config
@@ -490,9 +507,40 @@ paths:
       - oauth2:
         - storage.credentials:read
       - bearer: []
+      - apiKey: []
       summary: 获取上传文件临时凭证
       tags:
       - storage
+  /sms/v1/send:
+    post:
+      description: 发送短信
+      operationId: sendSMS
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SendSMS'
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SendSMSResult'
+          description: 返回发送结果
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - sms:send
+      - bearer: []
+      - apiKey: []
+      summary: 发送短信
+      tags:
+      - sms
 components:
   responses:
     ErrorResponse:
@@ -741,11 +789,11 @@ components:
           example: ap-guangzhou
           type: string
         cdn:
-          description: 存储对应的CDN地址
+          description: CDN地址
           example: https://cdn.uimkit.chat
           type: string
         url:
-          description: 上传路径对应的CDN地址
+          description: 上传之后的文件地址
           example: https://cdn.uimkit.chat/images/example.jpeg
           type: string
         credentials:
@@ -757,6 +805,63 @@ components:
       - provider
       - region
       type: object
+    SendSMS:
+      example:
+        phone: "18665311790"
+        provider: null
+        sign: 增长魔方
+        params: "{}"
+        content: "1668403"
+      properties:
+        phone:
+          description: 手机号
+          example: "18665311790"
+          type: string
+        content:
+          description: 短信内容或模版ID
+          example: "1668403"
+          type: string
+        params:
+          description: 模版参数
+          type: object
+        sign:
+          description: 短信签名
+          example: 增长魔方
+          type: string
+        provider:
+          $ref: '#/components/schemas/SMSProvider'
+      required:
+      - content
+      - phone
+      type: object
+    SendSMSResult:
+      example:
+        provider: null
+        success: true
+        provier_request_id: provier_request_id
+      properties:
+        success:
+          description: 是否发送成功
+          example: true
+          type: boolean
+        provider:
+          $ref: '#/components/schemas/SMSProvider'
+        provier_request_id:
+          description: 服务商返回的请求ID
+          type: string
+      required:
+      - provider
+      - success
+      type: object
+    SMSProvider:
+      description: 短信服务商
+      enum:
+      - qcloud
+      - aliyun
+      type: string
+      x-ms-enum:
+        name: SMSProvider
+        modelAsString: true
     ApiError:
       properties:
         code:
@@ -783,9 +888,14 @@ components:
             configs:write: 创建、更新配置、配置模版、配置组
             configs:delete: 删除配置、配置模版、配置组
             storage.credentials:read: 获取云存储上传凭证
+            sms:send: 发送短信
           tokenUrl: https://mofan.cn.authok.cn/oauth/token
       type: oauth2
     bearer:
       bearerFormat: JWT
       scheme: bearer
       type: http
+    apiKey:
+      in: header
+      name: X-Client-ID
+      type: apiKey
