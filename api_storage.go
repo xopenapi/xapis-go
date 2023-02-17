@@ -22,15 +22,157 @@ import (
 // StorageApiService StorageApi service
 type StorageApiService service
 
+type ApiGetAudioInfoRequest struct {
+	ctx context.Context
+	ApiService *StorageApiService
+	path *string
+	provider *Provider
+}
+
+// 音频在云存储的路径
+func (r ApiGetAudioInfoRequest) Path(path string) ApiGetAudioInfoRequest {
+	r.path = &path
+	return r
+}
+
+// 指定使用的云储存平台，可选值有：qcloud（腾讯云）、aliyun（阿里云）。如果未指定，使用默认平台。
+func (r ApiGetAudioInfoRequest) Provider(provider Provider) ApiGetAudioInfoRequest {
+	r.provider = &provider
+	return r
+}
+
+func (r ApiGetAudioInfoRequest) Execute() (*AudioInfo, *http.Response, error) {
+	return r.ApiService.GetAudioInfoExecute(r)
+}
+
+/*
+GetAudioInfo 获取音频信息
+
+获取音频信息
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiGetAudioInfoRequest
+*/
+func (a *StorageApiService) GetAudioInfo(ctx context.Context) ApiGetAudioInfoRequest {
+	return ApiGetAudioInfoRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+// Execute executes the request
+//  @return AudioInfo
+func (a *StorageApiService) GetAudioInfoExecute(r ApiGetAudioInfoRequest) (*AudioInfo, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *AudioInfo
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StorageApiService.GetAudioInfo")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/storage/v1/audio_info"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.path == nil {
+		return localVarReturnValue, nil, reportError("path is required and must be specified")
+	}
+
+	if r.provider != nil {
+		localVarQueryParams.Add("provider", parameterToString(*r.provider, ""))
+	}
+	localVarQueryParams.Add("path", parameterToString(*r.path, ""))
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["apiKey"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Client-ID"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
 type ApiGetStorageTemporaryCredentialsRequest struct {
 	ctx context.Context
 	ApiService *StorageApiService
-	provider *StorageProvider
+	provider *Provider
 	path *string
 }
 
 // 指定使用的云储存平台，可选值有：qcloud（腾讯云）、aliyun（阿里云）。如果未指定，使用默认平台。
-func (r ApiGetStorageTemporaryCredentialsRequest) Provider(provider StorageProvider) ApiGetStorageTemporaryCredentialsRequest {
+func (r ApiGetStorageTemporaryCredentialsRequest) Provider(provider Provider) ApiGetStorageTemporaryCredentialsRequest {
 	r.provider = &provider
 	return r
 }
@@ -86,6 +228,310 @@ func (a *StorageApiService) GetStorageTemporaryCredentialsExecute(r ApiGetStorag
 	}
 	if r.path != nil {
 		localVarQueryParams.Add("path", parameterToString(*r.path, ""))
+	}
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["apiKey"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Client-ID"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetVideoInfoRequest struct {
+	ctx context.Context
+	ApiService *StorageApiService
+	path *string
+	provider *Provider
+}
+
+// 视频在云存储的路径
+func (r ApiGetVideoInfoRequest) Path(path string) ApiGetVideoInfoRequest {
+	r.path = &path
+	return r
+}
+
+// 指定使用的云储存平台，可选值有：qcloud（腾讯云）、aliyun（阿里云）。如果未指定，使用默认平台。
+func (r ApiGetVideoInfoRequest) Provider(provider Provider) ApiGetVideoInfoRequest {
+	r.provider = &provider
+	return r
+}
+
+func (r ApiGetVideoInfoRequest) Execute() (*VideoInfo, *http.Response, error) {
+	return r.ApiService.GetVideoInfoExecute(r)
+}
+
+/*
+GetVideoInfo 获取视频信息
+
+获取视频信息
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiGetVideoInfoRequest
+*/
+func (a *StorageApiService) GetVideoInfo(ctx context.Context) ApiGetVideoInfoRequest {
+	return ApiGetVideoInfoRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+// Execute executes the request
+//  @return VideoInfo
+func (a *StorageApiService) GetVideoInfoExecute(r ApiGetVideoInfoRequest) (*VideoInfo, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *VideoInfo
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StorageApiService.GetVideoInfo")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/storage/v1/video_info"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.path == nil {
+		return localVarReturnValue, nil, reportError("path is required and must be specified")
+	}
+
+	if r.provider != nil {
+		localVarQueryParams.Add("provider", parameterToString(*r.provider, ""))
+	}
+	localVarQueryParams.Add("path", parameterToString(*r.path, ""))
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	if r.ctx != nil {
+		// API Key Authentication
+		if auth, ok := r.ctx.Value(ContextAPIKeys).(map[string]APIKey); ok {
+			if apiKey, ok := auth["apiKey"]; ok {
+				var key string
+				if apiKey.Prefix != "" {
+					key = apiKey.Prefix + " " + apiKey.Key
+				} else {
+					key = apiKey.Key
+				}
+				localVarHeaderParams["X-Client-ID"] = key
+			}
+		}
+	}
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := ioutil.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = ioutil.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+			var v ApiError
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+            		newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+            		newErr.model = v
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
+}
+
+type ApiGetVideoSnapshotRequest struct {
+	ctx context.Context
+	ApiService *StorageApiService
+	path *string
+	provider *Provider
+	time *float32
+	snapshotPath *string
+}
+
+// 视频在云存储的路径
+func (r ApiGetVideoSnapshotRequest) Path(path string) ApiGetVideoSnapshotRequest {
+	r.path = &path
+	return r
+}
+
+// 指定使用的云储存平台，可选值有：qcloud（腾讯云）、aliyun（阿里云）。如果未指定，使用默认平台。
+func (r ApiGetVideoSnapshotRequest) Provider(provider Provider) ApiGetVideoSnapshotRequest {
+	r.provider = &provider
+	return r
+}
+
+// 截图的时间，单位：秒
+func (r ApiGetVideoSnapshotRequest) Time(time float32) ApiGetVideoSnapshotRequest {
+	r.time = &time
+	return r
+}
+
+// 截图保存在云存储的路径
+func (r ApiGetVideoSnapshotRequest) SnapshotPath(snapshotPath string) ApiGetVideoSnapshotRequest {
+	r.snapshotPath = &snapshotPath
+	return r
+}
+
+func (r ApiGetVideoSnapshotRequest) Execute() (*VideoSnapshot, *http.Response, error) {
+	return r.ApiService.GetVideoSnapshotExecute(r)
+}
+
+/*
+GetVideoSnapshot 获取视频截图
+
+获取视频截图
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @return ApiGetVideoSnapshotRequest
+*/
+func (a *StorageApiService) GetVideoSnapshot(ctx context.Context) ApiGetVideoSnapshotRequest {
+	return ApiGetVideoSnapshotRequest{
+		ApiService: a,
+		ctx: ctx,
+	}
+}
+
+// Execute executes the request
+//  @return VideoSnapshot
+func (a *StorageApiService) GetVideoSnapshotExecute(r ApiGetVideoSnapshotRequest) (*VideoSnapshot, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodGet
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *VideoSnapshot
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "StorageApiService.GetVideoSnapshot")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/storage/v1/video_snapshot"
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.path == nil {
+		return localVarReturnValue, nil, reportError("path is required and must be specified")
+	}
+
+	if r.provider != nil {
+		localVarQueryParams.Add("provider", parameterToString(*r.provider, ""))
+	}
+	localVarQueryParams.Add("path", parameterToString(*r.path, ""))
+	if r.time != nil {
+		localVarQueryParams.Add("time", parameterToString(*r.time, ""))
+	}
+	if r.snapshotPath != nil {
+		localVarQueryParams.Add("snapshot_path", parameterToString(*r.snapshotPath, ""))
 	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}

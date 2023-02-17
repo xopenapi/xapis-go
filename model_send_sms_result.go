@@ -18,7 +18,7 @@ import (
 type SendSMSResult struct {
 	// 是否发送成功
 	Success bool `json:"success"`
-	Provider SMSProvider `json:"provider"`
+	Provider Provider `json:"provider"`
 	// 服务商返回的请求ID
 	ProvierRequestId *string `json:"provier_request_id,omitempty"`
 }
@@ -27,7 +27,7 @@ type SendSMSResult struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewSendSMSResult(success bool, provider SMSProvider) *SendSMSResult {
+func NewSendSMSResult(success bool, provider Provider) *SendSMSResult {
 	this := SendSMSResult{}
 	this.Success = success
 	this.Provider = provider
@@ -67,9 +67,9 @@ func (o *SendSMSResult) SetSuccess(v bool) {
 }
 
 // GetProvider returns the Provider field value
-func (o *SendSMSResult) GetProvider() SMSProvider {
+func (o *SendSMSResult) GetProvider() Provider {
 	if o == nil {
-		var ret SMSProvider
+		var ret Provider
 		return ret
 	}
 
@@ -78,7 +78,7 @@ func (o *SendSMSResult) GetProvider() SMSProvider {
 
 // GetProviderOk returns a tuple with the Provider field value
 // and a boolean to check if the value has been set.
-func (o *SendSMSResult) GetProviderOk() (*SMSProvider, bool) {
+func (o *SendSMSResult) GetProviderOk() (*Provider, bool) {
 	if o == nil {
     return nil, false
 	}
@@ -86,7 +86,7 @@ func (o *SendSMSResult) GetProviderOk() (*SMSProvider, bool) {
 }
 
 // SetProvider sets field value
-func (o *SendSMSResult) SetProvider(v SMSProvider) {
+func (o *SendSMSResult) SetProvider(v Provider) {
 	o.Provider = v
 }
 

@@ -5,14 +5,14 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Success** | **bool** | 是否发送成功 | 
-**Provider** | [**SMSProvider**](SMSProvider.md) |  | 
+**Provider** | [**Provider**](Provider.md) |  | 
 **ProvierRequestId** | Pointer to **string** | 服务商返回的请求ID | [optional] 
 
 ## Methods
 
 ### NewSendSMSResult
 
-`func NewSendSMSResult(success bool, provider SMSProvider, ) *SendSMSResult`
+`func NewSendSMSResult(success bool, provider Provider, ) *SendSMSResult`
 
 NewSendSMSResult instantiates a new SendSMSResult object
 This constructor will assign default values to properties that have it defined,
@@ -49,20 +49,20 @@ SetSuccess sets Success field to given value.
 
 ### GetProvider
 
-`func (o *SendSMSResult) GetProvider() SMSProvider`
+`func (o *SendSMSResult) GetProvider() Provider`
 
 GetProvider returns the Provider field if non-nil, zero value otherwise.
 
 ### GetProviderOk
 
-`func (o *SendSMSResult) GetProviderOk() (*SMSProvider, bool)`
+`func (o *SendSMSResult) GetProviderOk() (*Provider, bool)`
 
 GetProviderOk returns a tuple with the Provider field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetProvider
 
-`func (o *SendSMSResult) SetProvider(v SMSProvider)`
+`func (o *SendSMSResult) SetProvider(v Provider)`
 
 SetProvider sets Provider field to given value.
 

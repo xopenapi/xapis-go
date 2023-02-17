@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **Content** | **string** | 短信内容或模版ID | 
 **Params** | Pointer to **map[string]interface{}** | 模版参数 | [optional] 
 **Sign** | Pointer to **string** | 短信签名 | [optional] 
-**Provider** | Pointer to [**SMSProvider**](SMSProvider.md) |  | [optional] 
+**Provider** | Pointer to [**Provider**](Provider.md) |  | [optional] 
 
 ## Methods
 
@@ -121,20 +121,20 @@ HasSign returns a boolean if a field has been set.
 
 ### GetProvider
 
-`func (o *SendSMS) GetProvider() SMSProvider`
+`func (o *SendSMS) GetProvider() Provider`
 
 GetProvider returns the Provider field if non-nil, zero value otherwise.
 
 ### GetProviderOk
 
-`func (o *SendSMS) GetProviderOk() (*SMSProvider, bool)`
+`func (o *SendSMS) GetProviderOk() (*Provider, bool)`
 
 GetProviderOk returns a tuple with the Provider field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetProvider
 
-`func (o *SendSMS) SetProvider(v SMSProvider)`
+`func (o *SendSMS) SetProvider(v Provider)`
 
 SetProvider sets Provider field to given value.
 

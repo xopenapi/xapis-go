@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Provider** | [**StorageProvider**](StorageProvider.md) |  | 
+**Provider** | [**Provider**](Provider.md) |  | 
 **Bucket** | **string** | 存储桶 | 
 **Region** | **string** | 地区 | 
 **Cdn** | Pointer to **string** | CDN地址 | [optional] 
@@ -15,7 +15,7 @@ Name | Type | Description | Notes
 
 ### NewStorageTemporaryCredentials
 
-`func NewStorageTemporaryCredentials(provider StorageProvider, bucket string, region string, credentials map[string]interface{}, ) *StorageTemporaryCredentials`
+`func NewStorageTemporaryCredentials(provider Provider, bucket string, region string, credentials map[string]interface{}, ) *StorageTemporaryCredentials`
 
 NewStorageTemporaryCredentials instantiates a new StorageTemporaryCredentials object
 This constructor will assign default values to properties that have it defined,
@@ -32,20 +32,20 @@ but it doesn't guarantee that properties required by API are set
 
 ### GetProvider
 
-`func (o *StorageTemporaryCredentials) GetProvider() StorageProvider`
+`func (o *StorageTemporaryCredentials) GetProvider() Provider`
 
 GetProvider returns the Provider field if non-nil, zero value otherwise.
 
 ### GetProviderOk
 
-`func (o *StorageTemporaryCredentials) GetProviderOk() (*StorageProvider, bool)`
+`func (o *StorageTemporaryCredentials) GetProviderOk() (*Provider, bool)`
 
 GetProviderOk returns a tuple with the Provider field if it's non-nil, zero value otherwise
 and a boolean to check if the value has been set.
 
 ### SetProvider
 
-`func (o *StorageTemporaryCredentials) SetProvider(v StorageProvider)`
+`func (o *StorageTemporaryCredentials) SetProvider(v Provider)`
 
 SetProvider sets Provider field to given value.
 

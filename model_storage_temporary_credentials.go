@@ -16,7 +16,7 @@ import (
 
 // StorageTemporaryCredentials struct for StorageTemporaryCredentials
 type StorageTemporaryCredentials struct {
-	Provider StorageProvider `json:"provider"`
+	Provider Provider `json:"provider"`
 	// 存储桶
 	Bucket string `json:"bucket"`
 	// 地区
@@ -33,7 +33,7 @@ type StorageTemporaryCredentials struct {
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewStorageTemporaryCredentials(provider StorageProvider, bucket string, region string, credentials map[string]interface{}) *StorageTemporaryCredentials {
+func NewStorageTemporaryCredentials(provider Provider, bucket string, region string, credentials map[string]interface{}) *StorageTemporaryCredentials {
 	this := StorageTemporaryCredentials{}
 	this.Provider = provider
 	this.Bucket = bucket
@@ -51,9 +51,9 @@ func NewStorageTemporaryCredentialsWithDefaults() *StorageTemporaryCredentials {
 }
 
 // GetProvider returns the Provider field value
-func (o *StorageTemporaryCredentials) GetProvider() StorageProvider {
+func (o *StorageTemporaryCredentials) GetProvider() Provider {
 	if o == nil {
-		var ret StorageProvider
+		var ret Provider
 		return ret
 	}
 
@@ -62,7 +62,7 @@ func (o *StorageTemporaryCredentials) GetProvider() StorageProvider {
 
 // GetProviderOk returns a tuple with the Provider field value
 // and a boolean to check if the value has been set.
-func (o *StorageTemporaryCredentials) GetProviderOk() (*StorageProvider, bool) {
+func (o *StorageTemporaryCredentials) GetProviderOk() (*Provider, bool) {
 	if o == nil {
     return nil, false
 	}
@@ -70,7 +70,7 @@ func (o *StorageTemporaryCredentials) GetProviderOk() (*StorageProvider, bool) {
 }
 
 // SetProvider sets field value
-func (o *StorageTemporaryCredentials) SetProvider(v StorageProvider) {
+func (o *StorageTemporaryCredentials) SetProvider(v Provider) {
 	o.Provider = v
 }
 

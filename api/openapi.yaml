@@ -15,6 +15,8 @@ tags:
   name: storage
 - description: 短信服务
   name: sms
+- description: silk语音编解码
+  name: silk-codec
 paths:
   /config/v1/configs:
     get:
@@ -480,7 +482,7 @@ paths:
         name: provider
         required: false
         schema:
-          $ref: '#/components/schemas/StorageProvider'
+          $ref: '#/components/schemas/Provider'
         style: form
       - description: 上传路径，可以为空
         explode: true
@@ -509,6 +511,149 @@ paths:
       - bearer: []
       - apiKey: []
       summary: 获取上传文件临时凭证
+      tags:
+      - storage
+  /storage/v1/video_info:
+    get:
+      description: 获取视频信息
+      operationId: getVideoInfo
+      parameters:
+      - description: 指定使用的云储存平台，可选值有：qcloud（腾讯云）、aliyun（阿里云）。如果未指定，使用默认平台。
+        explode: true
+        in: query
+        name: provider
+        required: false
+        schema:
+          $ref: '#/components/schemas/Provider'
+        style: form
+      - description: 视频在云存储的路径
+        explode: true
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoInfo'
+          description: 返回视频信息
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - storage:read
+      - bearer: []
+      - apiKey: []
+      summary: 获取视频信息
+      tags:
+      - storage
+  /storage/v1/video_snapshot:
+    get:
+      description: 获取视频截图
+      operationId: getVideoSnapshot
+      parameters:
+      - description: 指定使用的云储存平台，可选值有：qcloud（腾讯云）、aliyun（阿里云）。如果未指定，使用默认平台。
+        explode: true
+        in: query
+        name: provider
+        required: false
+        schema:
+          $ref: '#/components/schemas/Provider'
+        style: form
+      - description: 视频在云存储的路径
+        explode: true
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: 截图的时间，单位：秒
+        explode: true
+        in: query
+        name: time
+        required: false
+        schema:
+          format: float
+          type: number
+        style: form
+      - description: 截图保存在云存储的路径
+        explode: true
+        in: query
+        name: snapshot_path
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VideoSnapshot'
+          description: 返回视频截图
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - storage:read
+      - bearer: []
+      - apiKey: []
+      summary: 获取视频截图
+      tags:
+      - storage
+  /storage/v1/audio_info:
+    get:
+      description: 获取音频信息
+      operationId: getAudioInfo
+      parameters:
+      - description: 指定使用的云储存平台，可选值有：qcloud（腾讯云）、aliyun（阿里云）。如果未指定，使用默认平台。
+        explode: true
+        in: query
+        name: provider
+        required: false
+        schema:
+          $ref: '#/components/schemas/Provider'
+        style: form
+      - description: 音频在云存储的路径
+        explode: true
+        in: query
+        name: path
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AudioInfo'
+          description: 返回音频信息
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+          description: 返回错误
+      security:
+      - oauth2:
+        - storage:read
+      - bearer: []
+      - apiKey: []
+      summary: 获取音频信息
       tags:
       - storage
   /sms/v1/send:
@@ -541,6 +686,109 @@ paths:
       summary: 发送短信
       tags:
       - sms
+  /silk/v3/encode:
+    get:
+      description: 将语音链接编码为silk-v3格式
+      operationId: encodeSilkV3ByURL
+      parameters:
+      - description: 语音链接
+        explode: true
+        in: query
+        name: url
+        required: true
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: 返回编码后的音频
+      summary: 将语音链接编码为silk-v3格式
+      tags:
+      - silk-codec
+    post:
+      description: 将语音编码为silk-v3格式
+      operationId: encodeSilkV3
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/encodeSilkV3_request'
+      responses:
+        "200":
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: 返回编码后的音频
+      summary: 将语音编码为silk-v3格式
+      tags:
+      - silk-codec
+  /silk/v3/decode:
+    get:
+      description: 将链接解码silk-v3格式的语音
+      operationId: decodeSilkV3ByURL
+      parameters:
+      - description: 语音链接
+        explode: true
+        in: query
+        name: url
+        required: true
+        schema:
+          type: string
+        style: form
+      - description: 解码后的音频格式，如：mp3、m4a、mov等。
+        explode: true
+        in: query
+        name: format
+        required: false
+        schema:
+          type: string
+        style: form
+      responses:
+        "200":
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: 返回解码后的音频
+      summary: 将链接解码silk-v3格式的语音
+      tags:
+      - silk-codec
+    post:
+      description: 解码silk-v3格式的语音
+      operationId: decodeSilkV3
+      parameters:
+      - description: 解码后的音频格式，如：mp3、m4a、mov等。
+        explode: true
+        in: query
+        name: format
+        required: false
+        schema:
+          type: string
+        style: form
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/encodeSilkV3_request'
+      responses:
+        "200":
+          content:
+            application/octet-stream:
+              schema:
+                format: binary
+                type: string
+          description: 返回解码后的音频
+      summary: 解码silk-v3格式的语音
+      tags:
+      - silk-codec
 components:
   responses:
     ErrorResponse:
@@ -760,15 +1008,6 @@ components:
       - id
       - name
       type: object
-    StorageProvider:
-      description: 云存储服务商
-      enum:
-      - qcloud
-      - aliyun
-      type: string
-      x-ms-enum:
-        name: StorageProvider
-        modelAsString: true
     StorageTemporaryCredentials:
       example:
         bucket: uim-cdn-202110291082
@@ -779,7 +1018,7 @@ components:
         url: https://cdn.uimkit.chat/images/example.jpeg
       properties:
         provider:
-          $ref: '#/components/schemas/StorageProvider'
+          $ref: '#/components/schemas/Provider'
         bucket:
           description: 存储桶
           example: uim-cdn-202110291082
@@ -805,6 +1044,74 @@ components:
       - provider
       - region
       type: object
+    VideoInfo:
+      example:
+        duration: 0
+        size: 5
+        width: 6
+        format: format
+        height: 1
+      properties:
+        duration:
+          description: 视频时长（秒）
+          format: int32
+          type: integer
+        width:
+          description: 视频宽度（像素）
+          format: int32
+          type: integer
+        height:
+          description: 视频高度（像素）
+          format: int32
+          type: integer
+        size:
+          description: 视频大小（字节）
+          format: int32
+          type: integer
+        format:
+          description: 视频格式
+          type: string
+      required:
+      - duration
+      - height
+      - size
+      - width
+      type: object
+    VideoSnapshot:
+      example:
+        provider: null
+        url: url
+      properties:
+        provider:
+          $ref: '#/components/schemas/Provider'
+        url:
+          description: 截图的链接地址
+          type: string
+      required:
+      - provider
+      - url
+      type: object
+    AudioInfo:
+      example:
+        duration: 0
+        size: 6
+        format: format
+      properties:
+        duration:
+          description: 音频时长（秒）
+          format: int32
+          type: integer
+        size:
+          description: 音频大小（字节）
+          format: int32
+          type: integer
+        format:
+          description: 音频格式
+          type: string
+      required:
+      - duration
+      - size
+      type: object
     SendSMS:
       example:
         phone: "18665311790"
@@ -829,7 +1136,7 @@ components:
           example: 增长魔方
           type: string
         provider:
-          $ref: '#/components/schemas/SMSProvider'
+          $ref: '#/components/schemas/Provider'
       required:
       - content
       - phone
@@ -845,7 +1152,7 @@ components:
           example: true
           type: boolean
         provider:
-          $ref: '#/components/schemas/SMSProvider'
+          $ref: '#/components/schemas/Provider'
         provier_request_id:
           description: 服务商返回的请求ID
           type: string
@@ -853,14 +1160,14 @@ components:
       - provider
       - success
       type: object
-    SMSProvider:
+    Provider:
       description: 短信服务商
       enum:
       - qcloud
       - aliyun
       type: string
       x-ms-enum:
-        name: SMSProvider
+        name: Provider
         modelAsString: true
     ApiError:
       properties:
@@ -879,6 +1186,12 @@ components:
       required:
       - code
       type: object
+    encodeSilkV3_request:
+      properties:
+        file:
+          format: binary
+          type: string
+      type: object
   securitySchemes:
     oauth2:
       flows:
@@ -887,6 +1200,7 @@ components:
             configs:read: 读取配置、配置模版、配置组
             configs:write: 创建、更新配置、配置模版、配置组
             configs:delete: 删除配置、配置模版、配置组
+            storage:read: 读取云存储资源
             storage.credentials:read: 获取云存储上传凭证
             sms:send: 发送短信
           tokenUrl: https://mofan.cn.authok.cn/oauth/token

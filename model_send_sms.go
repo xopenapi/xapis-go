@@ -24,7 +24,7 @@ type SendSMS struct {
 	Params map[string]interface{} `json:"params,omitempty"`
 	// 短信签名
 	Sign *string `json:"sign,omitempty"`
-	Provider *SMSProvider `json:"provider,omitempty"`
+	Provider *Provider `json:"provider,omitempty"`
 }
 
 // NewSendSMS instantiates a new SendSMS object
@@ -159,9 +159,9 @@ func (o *SendSMS) SetSign(v string) {
 }
 
 // GetProvider returns the Provider field value if set, zero value otherwise.
-func (o *SendSMS) GetProvider() SMSProvider {
+func (o *SendSMS) GetProvider() Provider {
 	if o == nil || isNil(o.Provider) {
-		var ret SMSProvider
+		var ret Provider
 		return ret
 	}
 	return *o.Provider
@@ -169,7 +169,7 @@ func (o *SendSMS) GetProvider() SMSProvider {
 
 // GetProviderOk returns a tuple with the Provider field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *SendSMS) GetProviderOk() (*SMSProvider, bool) {
+func (o *SendSMS) GetProviderOk() (*Provider, bool) {
 	if o == nil || isNil(o.Provider) {
     return nil, false
 	}
@@ -185,8 +185,8 @@ func (o *SendSMS) HasProvider() bool {
 	return false
 }
 
-// SetProvider gets a reference to the given SMSProvider and assigns it to the Provider field.
-func (o *SendSMS) SetProvider(v SMSProvider) {
+// SetProvider gets a reference to the given Provider and assigns it to the Provider field.
+func (o *SendSMS) SetProvider(v Provider) {
 	o.Provider = &v
 }
 
