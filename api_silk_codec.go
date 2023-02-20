@@ -41,7 +41,7 @@ func (r ApiDecodeSilkV3Request) File(file *os.File) ApiDecodeSilkV3Request {
 	return r
 }
 
-func (r ApiDecodeSilkV3Request) Execute() (**os.File, *http.Response, error) {
+func (r ApiDecodeSilkV3Request) Execute() (*os.File, *http.Response, error) {
 	return r.ApiService.DecodeSilkV3Execute(r)
 }
 
@@ -62,12 +62,12 @@ func (a *SilkCodecApiService) DecodeSilkV3(ctx context.Context) ApiDecodeSilkV3R
 
 // Execute executes the request
 //  @return *os.File
-func (a *SilkCodecApiService) DecodeSilkV3Execute(r ApiDecodeSilkV3Request) (**os.File, *http.Response, error) {
+func (a *SilkCodecApiService) DecodeSilkV3Execute(r ApiDecodeSilkV3Request) (*os.File, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  **os.File
+		localVarReturnValue  *os.File
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SilkCodecApiService.DecodeSilkV3")
@@ -174,7 +174,7 @@ func (r ApiDecodeSilkV3ByURLRequest) Format(format string) ApiDecodeSilkV3ByURLR
 	return r
 }
 
-func (r ApiDecodeSilkV3ByURLRequest) Execute() (**os.File, *http.Response, error) {
+func (r ApiDecodeSilkV3ByURLRequest) Execute() (*os.File, *http.Response, error) {
 	return r.ApiService.DecodeSilkV3ByURLExecute(r)
 }
 
@@ -195,12 +195,12 @@ func (a *SilkCodecApiService) DecodeSilkV3ByURL(ctx context.Context) ApiDecodeSi
 
 // Execute executes the request
 //  @return *os.File
-func (a *SilkCodecApiService) DecodeSilkV3ByURLExecute(r ApiDecodeSilkV3ByURLRequest) (**os.File, *http.Response, error) {
+func (a *SilkCodecApiService) DecodeSilkV3ByURLExecute(r ApiDecodeSilkV3ByURLRequest) (*os.File, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  **os.File
+		localVarReturnValue  *os.File
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SilkCodecApiService.DecodeSilkV3ByURL")
@@ -286,7 +286,7 @@ func (r ApiEncodeSilkV3Request) File(file *os.File) ApiEncodeSilkV3Request {
 	return r
 }
 
-func (r ApiEncodeSilkV3Request) Execute() (**os.File, *http.Response, error) {
+func (r ApiEncodeSilkV3Request) Execute() (*os.File, *http.Response, error) {
 	return r.ApiService.EncodeSilkV3Execute(r)
 }
 
@@ -307,12 +307,12 @@ func (a *SilkCodecApiService) EncodeSilkV3(ctx context.Context) ApiEncodeSilkV3R
 
 // Execute executes the request
 //  @return *os.File
-func (a *SilkCodecApiService) EncodeSilkV3Execute(r ApiEncodeSilkV3Request) (**os.File, *http.Response, error) {
+func (a *SilkCodecApiService) EncodeSilkV3Execute(r ApiEncodeSilkV3Request) (*os.File, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  **os.File
+		localVarReturnValue  *os.File
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SilkCodecApiService.EncodeSilkV3")
@@ -409,7 +409,7 @@ func (r ApiEncodeSilkV3ByURLRequest) Url(url string) ApiEncodeSilkV3ByURLRequest
 	return r
 }
 
-func (r ApiEncodeSilkV3ByURLRequest) Execute() (**os.File, *http.Response, error) {
+func (r ApiEncodeSilkV3ByURLRequest) Execute() (*os.File, *http.Response, error) {
 	return r.ApiService.EncodeSilkV3ByURLExecute(r)
 }
 
@@ -430,12 +430,12 @@ func (a *SilkCodecApiService) EncodeSilkV3ByURL(ctx context.Context) ApiEncodeSi
 
 // Execute executes the request
 //  @return *os.File
-func (a *SilkCodecApiService) EncodeSilkV3ByURLExecute(r ApiEncodeSilkV3ByURLRequest) (**os.File, *http.Response, error) {
+func (a *SilkCodecApiService) EncodeSilkV3ByURLExecute(r ApiEncodeSilkV3ByURLRequest) (*os.File, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodGet
 		localVarPostBody     interface{}
 		formFiles            []formFile
-		localVarReturnValue  **os.File
+		localVarReturnValue  *os.File
 	)
 
 	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "SilkCodecApiService.EncodeSilkV3ByURL")
